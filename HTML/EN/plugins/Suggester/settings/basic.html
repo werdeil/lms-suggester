@@ -1,0 +1,13 @@
+[% PROCESS settings/header.html %]
+
+<div class="settingGroup">
+	<div class="settingSubGroup">
+
+		<div class="prefName">[% "PLUGIN_SUGGESTER_COUNT" | string %]</div>
+		<div class="prefDesc">[% "PLUGIN_SUGGESTER_COUNT_DESC" | string %]</div>
+		<input type="text" name="pref_count" value="[% prefs.count %]" size="4" />
+
+	</div>
+</div>
+
+[% PROCESS settings/footer.html %]
