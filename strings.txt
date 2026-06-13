@@ -1,6 +1,6 @@
 PLUGIN_SUGGESTER
 	EN	Album Suggester
-	FR	Suggesteur d'albums
+	FR	Suggestions d'albums
 
 PLUGIN_SUGGESTER_DESC
 	EN	Suggests a handful of random albums from your library to pick and play.

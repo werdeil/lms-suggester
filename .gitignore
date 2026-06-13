@@ -1,2 +1,5 @@
 # Local deployment script, specific to a personal LMS setup.
 deploy.sh
+
+# Local Claude Code settings
+.claude/

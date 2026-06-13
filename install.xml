@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension>
 	<id>Suggester</id>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 	<name>PLUGIN_SUGGESTER</name>
 	<description>PLUGIN_SUGGESTER_DESC</description>
 	<creator>werdeil</creator>
+	<icon>plugins/Suggester/html/icon.png</icon>
 	<module>Plugins::Suggester::Plugin</module>
 	<defaultState>enabled</defaultState>
 	<targetApplication>
