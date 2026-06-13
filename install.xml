@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension>
+	<id>Suggester</id>
+	<version>0.1.0</version>
+	<name>PLUGIN_SUGGESTER</name>
+	<description>PLUGIN_SUGGESTER_DESC</description>
+	<creator>werdeil</creator>
+	<module>Plugins::Suggester::Plugin</module>
+	<defaultState>enabled</defaultState>
+	<targetApplication>
+		<id>SqueezeCenter</id>
+		<minVersion>8.0</minVersion>
+		<maxVersion>*</maxVersion>
+	</targetApplication>
+</extension>
