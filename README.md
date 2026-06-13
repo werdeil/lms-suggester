@@ -8,6 +8,11 @@ separate server.
 > Deliberately minimal scope: **suggestion only**. LMS does the rest (playback,
 > album info, now-playing).
 
+> **Primary target: the Material skin.** The plugin works in every LMS UI, but
+> the experience (notably the "New selection" refresh, which relies on
+> `nextWindow => 'refresh'`) is tuned for Material. On the classic web skin that
+> refresh is less polished — a deliberate trade-off in favour of Material.
+
 ## Structure
 
 The repository **is** the plugin folder (module `Plugins::Suggester::Plugin`):
@@ -16,6 +21,8 @@ The repository **is** the plugin folder (module `Plugins::Suggester::Plugin`):
 install.xml     plugin metadata (version, module, LMS compatibility)
 strings.txt     EN/FR labels
 Plugin.pm       the core: menu + album picking
+Settings.pm     web settings page (number of albums)
+HTML/EN/...      settings template (settings/basic.html)
 ```
 
 ## Installation
@@ -60,6 +67,11 @@ what to fix.
 
 ## Possible improvements
 
-- Settings page for the number of albums (`count`, already a pref).
-- Filters: never played, by genre, by decade.
-- A "refresh" button / new batch.
+Done in v0.2: settings page for the number of albums, a "New selection"
+button (fresh batch), and clamping `count` to the library size.
+
+Next:
+
+- Filters: never/seldom played, forgotten for N months, by genre, by decade.
+- Suggest tracks or artists, not only albums.
+- `repo.xml` for auto-install / auto-update via an LMS repository URL.

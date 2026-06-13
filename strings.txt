@@ -9,3 +9,15 @@ PLUGIN_SUGGESTER_DESC
 PLUGIN_SUGGESTER_EMPTY
 	EN	No albums found
 	FR	Aucun album trouvé
+
+PLUGIN_SUGGESTER_REFRESH
+	EN	Refresh selection
+	FR	Rafraîchir la sélection
+
+PLUGIN_SUGGESTER_COUNT
+	EN	Number of albums
+	FR	Nombre d'albums
+
+PLUGIN_SUGGESTER_COUNT_DESC
+	EN	How many random albums to suggest (1-10).
+	FR	Combien d'albums au hasard proposer (1 à 10).
