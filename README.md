@@ -65,13 +65,36 @@ version:
 If one of these breaks, the `plugin.suggester` and `server.log` logs will say
 what to fix.
 
+## Scope & positioning
+
+This plugin is **not** a rule-based playback engine, and deliberately so. If you
+want random/never-played/by-genre **playback** that auto-feeds the queue, AF-1's
+[Dynamic Playlist](https://github.com/AF-1/lms-dynamicplaylists) already does it
+better: its built-in definitions (e.g. `albums_001_random`, `albums_081_neverplayed`)
+are track-driven SQL with a persistent play history, virtual-library and genre
+filters, compilation handling, and Alternative Play Count integration. Competing
+on selection criteria is a losing race.
+
+What Dynamic Playlist does **not** do is what this plugin is for: present a small
+**visual shortlist of N albums to pick from**, with no imposed playback — a
+"what do I feel like tonight?" panel, not an auto-fed mix. Future work should
+double down on that picking experience, not reimplement a rules engine.
+
 ## Possible improvements
 
 Done in v0.2: settings page for the number of albums, a "New selection"
 button (fresh batch), and clamping `count` to the library size.
 
-Next:
+Done in v0.3: "Refresh avoiding the ones I just saw" — a light, plugin-local
+recently-shown memory (in-memory rolling window, per client) so a new batch
+doesn't repeat the covers you just saw. Bounded by the library size so the
+random pool never runs dry. This is the one genuine gap vs Dynamic Playlist's
+persistent history.
 
-- Filters: never/seldom played, forgotten for N months, by genre, by decade.
-- Suggest tracks or artists, not only albums.
-- `repo.xml` for auto-install / auto-update via an LMS repository URL.
+Next (within the shortlist niche — nothing that re-treads Dynamic Playlist):
+
+- Polish the shortlist UX (cover layout, quick "play this album" affordance).
+
+Dropped (covered by Dynamic Playlist, not worth reimplementing): rule-based
+filters (never/seldom played, by genre/decade), and suggesting tracks/artists as
+a playback feed.

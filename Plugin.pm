@@ -33,6 +33,15 @@ $prefs->setValidate({ validator => 'intlimit', low => 1, high => 10 }, 'count');
 my %CACHE;
 my $CACHE_TTL = 300;   # seconds
 
+# Per-client memory of recently shown album ids, so "New selection" gives a
+# genuinely fresh batch instead of repeating the covers you are looking at.
+# This is the one real gap vs Dynamic Playlist's persistent history — here it
+# is deliberately light: an in-memory rolling window, no DB, no persistence.
+# Bounded by $RECENT_MAX (and, in albumsFeed, by the library size) so the
+# random pool never runs dry and the structure stays small.
+my %RECENT;            # client key => [ album ids, oldest first ]
+my $RECENT_MAX = 50;
+
 sub initPlugin {
 	my $class = shift;
 
@@ -73,8 +82,22 @@ sub albumsFeed {
 		@ids = @{ $cached->{ids} };
 	}
 	else {
-		# RANDOM() on the SQLite side via a scalar ref (literal SQL).
-		my $rs = Slim::Schema->search('Album', undef, {
+		# Exclude the recently shown albums so a fresh draw doesn't repeat the
+		# covers you just saw. Trim that memory first so we never exclude so
+		# many that fewer than $count albums remain pickable (which would make
+		# RANDOM() return a short list).
+		my $recent = $RECENT{$key} ||= [];
+		my $max_recent = $total - $count;
+		$max_recent = 0 if $max_recent < 0;
+		$max_recent = $RECENT_MAX if $max_recent > $RECENT_MAX;
+		if ( @$recent > $max_recent ) {
+			splice(@$recent, 0, scalar(@$recent) - $max_recent);   # drop oldest
+		}
+
+		# RANDOM() on the SQLite side via a scalar ref (literal SQL), with the
+		# recently-shown ids filtered out when there are any.
+		my $cond = @$recent ? { 'me.id' => { 'not in' => [ @$recent ] } } : undef;
+		my $rs = Slim::Schema->search('Album', $cond, {
 			order_by => \'RANDOM()',
 			rows     => $count,
 		});
@@ -130,10 +153,18 @@ sub albumsFeed {
 # Drop this client's cached selection so the next albumsFeed() draw is fresh.
 # Paired with nextWindow => 'refresh' on the button: the UI runs this action,
 # then refreshes the album list window in place (no new level, no title change).
+#
+# Before dropping the cache, remember the batch currently on screen so the next
+# draw avoids it. New batches are drawn excluding the recent memory, so the ids
+# we add here can't already be in it — no de-dup needed.
 sub refreshAction {
 	my ($client, $cb, $args, $pt) = @_;
 
 	my $key = $client ? $client->id : '_noclient_';
+
+	if ( my $cached = $CACHE{$key} ) {
+		push @{ $RECENT{$key} ||= [] }, @{ $cached->{ids} };
+	}
 	delete $CACHE{$key};
 
 	$cb->({ items => [ { type => 'text', name => '' } ] });
